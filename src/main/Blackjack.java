@@ -1,15 +1,18 @@
 package main;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Blackjack {
-    static final String[] suits = {"♠", "♥", "♣", "♦"};
-    static final String[] faces = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+    private static final String[] suits = {"♠", "♥", "♣", "♦"};
+    private static final String[] faces = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
     public static void main(String[] args) {
         String[] deck = makeDeck(suits, faces);
-        printArray(deck);
-        //sadasd
+        //printArray(deck);
+	    //String[] shuffled = shuffleDeck(deck);
+        //printArray(shuffled);
+        //System.out.println("\n" + shuffled.length);
+
     }
 
     static void printArray(String[] arr){
@@ -27,5 +30,13 @@ public class Blackjack {
             }
         }
         return unshuffled;
+    }
+
+    static String[] shuffleDeck(String[] unShuffled){
+    	String[] shuffled = new String[52];
+    	List<String> deckList = Arrays.asList(unShuffled);
+	    Collections.shuffle(deckList);
+    	deckList.toArray(shuffled);
+    	return shuffled;
     }
 }
