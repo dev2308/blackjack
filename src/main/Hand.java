@@ -10,6 +10,8 @@ public class Hand {
 		score = 0;
 	}
 
+	//Getter methods
+
 	@Override
 	public String toString(){
 		String cardString = "";
@@ -17,6 +19,10 @@ public class Hand {
 			cardString += card + " ";
 		}
 		return cardString;
+	}
+
+	public String toStringDealer(){
+		return (cards.get(0) + " ▮ ");
 	}
 
 	public String[] cards(){
@@ -31,12 +37,21 @@ public class Hand {
 		return score;
 	}
 
-	public void addCard(String newCard){
+	//Methods to modify hand
+
+	public void add(String newCard){
 		cards.add(newCard);
 		score += parseCardScore(newCard);
 	}
 
-	static int parseCardScore(String card){
+	public void clear(){
+		score = 0;
+		cards = new ArrayList<>();
+	}
+
+	//Misc calculation/utility methods
+
+	private int parseCardScore(String card){
 		switch(card.charAt(0)){
 			case 'A':
 				return 1;
