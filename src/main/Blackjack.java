@@ -7,7 +7,7 @@ public class Blackjack {
     private static final String[] suits = {"♠", "♥", "♣", "♦"};
     private static final String[] faces = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
     private static ArrayList<String> playerCards = new ArrayList<>();
-    private static ArrayList<String> dealerCards = new ArrayList<>();
+	private static ArrayList<String> dealerCards = new ArrayList<>();
     public static void main(String[] args) {
         String[] deck = makeDeck(suits, faces);
 		boolean playing = true;
