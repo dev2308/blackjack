@@ -34,6 +34,11 @@ public class Hand {
 	}
 
 	public int score(){
+		for(String card: cards){
+			if(card.contains("A") && score > 21){
+				return score-10;
+			}
+		}
 		return score;
 	}
 
@@ -54,7 +59,7 @@ public class Hand {
 	private int parseCardScore(String card){
 		switch(card.charAt(0)){
 			case 'A':
-				return 1;
+				return 11;
 			case 'K':
 				return 10;
 			case 'Q':
