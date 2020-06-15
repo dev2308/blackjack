@@ -3,7 +3,7 @@ package main;
 import java.util.ArrayList;
 
 public class Hand {
-	private ArrayList<String> cards;
+	private ArrayList<Card> cards;
 	private int score;
 	public Hand() {
 		cards = new ArrayList<>();
@@ -15,7 +15,7 @@ public class Hand {
 	@Override
 	public String toString(){
 		String cardString = "";
-		for(String card: cards){
+		for(Card card: cards){
 			cardString += card + " ";
 		}
 		return cardString;
@@ -25,8 +25,8 @@ public class Hand {
 		return (cards.get(0) + " ▮ ");
 	}
 
-	public String[] cards(){
-		String[] cardsArray = new String[cards.size()];
+	public Card[] cards(){
+		Card[] cardsArray = new Card[cards.size()];
 		for(int i = 0; i < cards.size(); i++){
 			cardsArray[i] = cards.get(i);
 		}
@@ -34,8 +34,8 @@ public class Hand {
 	}
 
 	public int score(){
-		for(String card: cards){
-			if(card.contains("A") && score > 21){
+		for(Card card: cards){
+			if(card.face().equals("A") && score > 21){
 				return score-10;
 			}
 		}
@@ -44,39 +44,13 @@ public class Hand {
 
 	//Methods to modify hand
 
-	public void add(String newCard){
+	public void add(Card newCard){
 		cards.add(newCard);
-		score += parseCardScore(newCard);
+		score += newCard.value();
 	}
 
 	public void clear(){
 		score = 0;
 		cards = new ArrayList<>();
 	}
-
-	//Misc calculation/utility methods
-
-	private int parseCardScore(String card){
-		switch(card.charAt(0)){
-			case 'A':
-				return 11;
-			case 'K':
-				return 10;
-			case 'Q':
-				return 10;
-			case 'J':
-				return 10;
-			case '1':
-				if(card.length() > 2){
-					return 10;
-				}
-				else{
-					return 1;
-				}
-			default:
-				return card.charAt(0) - 48;
-		}
-	}
-
-
 }

@@ -1,49 +1,55 @@
 package main;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import main.Hand;
 
 public class Blackjack {
-    private static final String[] suits = {"♠", "♥", "♣", "♦"};
-    private static final String[] faces = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-    private static Hand playerCards = new Hand();
-	private static Hand dealerCards = new Hand();
-    public static void main(String[] args) {
-        String[] deck = makeDeck(suits, faces);
+    private Hand playerCards = new Hand();
+	private Hand dealerCards = new Hand();
+
+	public  static void main(String[] args) {
+		new Blackjack().run();
+
+	}
+
+	public Blackjack() {
+	}
+
+    public void run() {
+        Deck deck = new Deck();
+        deck.shuffle();
 		boolean playing = true;
 	    Scanner scan1 = new Scanner(System.in);
 		while(playing){
-			playOneRound(new ArrayList<>(shuffleDeck(deck)));
+			playOneRound(deck);
 			System.out.println("Play Again? (Y or N)");
-
 			String response = scan1.next();
 			if(!response.equalsIgnoreCase("y")){
 				playing = false;
 			}
-			playerCards.clear();
-			dealerCards.clear();
+
 		}
 	    scan1.close();
     }
 
-    static void playOneRound(ArrayList<String> deck){
+     void playOneRound(Deck deck){
         deck = dealCards(deck);
         printCardsHidden();
 		deck = runPlayerHand(deck);
 		printCards();
 		deck = runDealerHand(deck);
 		printResult(playerCards.score(), dealerCards.score());
+	    playerCards.clear();
+	    dealerCards.clear();
     }
 
-    private static ArrayList<String> runPlayerHand(ArrayList<String> deck){
+    private Deck runPlayerHand(Deck deck){
     	Scanner scan = new Scanner(System.in);
     	boolean acceptingCards = true;
     	while(acceptingCards && playerCards.score() <= 21){
     		System.out.println("Hit or Knock (Enter H or K)");
     		String response = scan.next();
     		if(response.equalsIgnoreCase("H")){
-    			playerCards.add(deck.remove(0));
+    			playerCards.add(deck.deal());
 			    System.out.flush();
 			    printCardsHidden();
 		    }
@@ -54,55 +60,36 @@ public class Blackjack {
     	return deck;
     }
 
-    private static ArrayList<String> runDealerHand(ArrayList<String> deck){
+    private Deck runDealerHand(Deck deck){
     	while(dealerCards.score() < 17){
-			dealerCards.add(deck.remove(0));
+			dealerCards.add(deck.deal());
 		    System.out.flush();
 		    printCards();
 	    }
     	return deck;
     }
 
-	private static String[] makeDeck(String[] suits, String[] faces){
-		String[] unshuffled = new String[52];
-		int ind = 0;
-		for(String suit: suits){
-			for(String face: faces){
-				unshuffled[ind++] = face + suit;
-			}
-		}
-		return unshuffled;
-	}
-
-	private static ArrayList<String> dealCards(ArrayList<String> deck){
+	private Deck dealCards(Deck deck){
 		for(int i = 0; i < 2; i ++){
-			playerCards.add(deck.remove(0));
-			dealerCards.add(deck.remove(0));
+			playerCards.add(deck.deal());
+			dealerCards.add(deck.deal());
 		}
 		return deck;
 	}
 
-	private static List<String> shuffleDeck(String[] unShuffled){
-		List<String> deckList = Arrays.asList(unShuffled);
-		Collections.shuffle(deckList);
-		return deckList;
-	}
-
-
-
-	private static void printCards(){
+	private  void printCards(){
 		System.out.println("|-----Your Cards-----|---Dealer's Cards--|");
-		System.out.print("| " + formatSpaces(playerCards.toString()) + " | " + formatSpaces(dealerCards.toString()) + " |");
+		System.out.print("| " + Utils.formatSpaces(playerCards.toString()) + " | " + Utils.formatSpaces(dealerCards.toString()) + " |");
 		System.out.println("\nYour Score: " + playerCards.score() + "\nDealer Score: " + dealerCards.score());
 	}
 
-    static void printCardsHidden(){
+    private void printCardsHidden(){
         System.out.println("|-----Your Cards-----|---Dealer's Cards--|");
-	    System.out.print("| " + formatSpaces(playerCards.toString()) + " | " + formatSpaces(dealerCards.toStringDealer()) + " |");
+	    System.out.print("| " + Utils.formatSpaces(playerCards.toString()) + " | " + Utils.formatSpaces(dealerCards.toStringDealer()) + " |");
         System.out.println("\nYour Score: " + playerCards.score());
     }
 
-	private static void printResult(int playerScore, int dealerScore){
+	private  void printResult(int playerScore, int dealerScore){
     	System.out.println("#########################");
 		if(playerScore == dealerScore || (playerScore > 21 && dealerScore > 21)){
 			System.out.println("Push");
@@ -116,17 +103,4 @@ public class Blackjack {
 		System.out.println("#########################");
 	}
 
-	static String formatSpaces(String s){
-    	for(int i = s.length(); i < 15; i++){
-    		s+= " ";
-	    }
-    	s+="\t";
-    	return s;
-	}
-
-    static void printArray(String[] arr){
-        for(String asdf: arr){
-            System.out.print(asdf + " ");
-        }
-    }
 }
