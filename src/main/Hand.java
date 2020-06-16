@@ -34,9 +34,12 @@ public class Hand {
 	}
 
 	public int score(){
-		for(Card card: cards){
-			if(card.face().equals("A") && score > 21){
-				return score-10;
+
+		if(score < 11) {
+			for (Card card : cards) {
+				if (card.face() == Face.ACE) {
+					return score + 10;
+				}
 			}
 		}
 		return score;

@@ -17,7 +17,7 @@ public class Card {
 		return face.value();
 	}
 
-	public String face(){
-		return face.toString();
+	public Face face(){
+		return face;
 	}
 }
