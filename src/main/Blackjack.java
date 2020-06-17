@@ -3,8 +3,8 @@ package main;
 import java.util.*;
 
 public class Blackjack {
-    private Hand playerCards = new Hand();
-	private Hand dealerCards = new Hand();
+    private Player p1 = new Player();
+	private Player dealer = new Player();
 
 	public  static void main(String[] args) {
 		new Blackjack().run();
@@ -16,7 +16,6 @@ public class Blackjack {
 
     public void run() {
         Deck deck = new Deck();
-        deck.shuffle();
 		boolean playing = true;
 	    Scanner scan1 = new Scanner(System.in);
 		while(playing){
@@ -26,7 +25,9 @@ public class Blackjack {
 			if(!response.equalsIgnoreCase("y")){
 				playing = false;
 			}
-
+			if(deck.size() <= 13){
+				deck.reshuffle();
+			}
 		}
 	    scan1.close();
     }
@@ -37,19 +38,19 @@ public class Blackjack {
 		deck = runPlayerHand(deck);
 		printCards();
 		deck = runDealerHand(deck);
-		printResult(playerCards.score(), dealerCards.score());
-	    playerCards.clear();
-	    dealerCards.clear();
+		printResult(p1.hand().score(), dealer.hand().score());
+	    p1.clearHand();
+	    dealer.clearHand();
     }
 
     private Deck runPlayerHand(Deck deck){
     	Scanner scan = new Scanner(System.in);
     	boolean acceptingCards = true;
-    	while(acceptingCards && playerCards.score() <= 21){
+    	while(acceptingCards && p1.hand().score() <= 21){
     		System.out.println("Hit or Knock (Enter H or K)");
     		String response = scan.next();
     		if(response.equalsIgnoreCase("H")){
-    			playerCards.add(deck.deal());
+    			p1.deal(deck.deal());
 			    System.out.flush();
 			    printCardsHidden();
 		    }
@@ -61,8 +62,8 @@ public class Blackjack {
     }
 
     private Deck runDealerHand(Deck deck){
-    	while(dealerCards.score() < 17){
-			dealerCards.add(deck.deal());
+    	while(dealer.hand().score() < 17){
+			dealer.hand().add(deck.deal());
 		    System.out.flush();
 		    printCards();
 	    }
@@ -71,22 +72,22 @@ public class Blackjack {
 
 	private Deck dealCards(Deck deck){
 		for(int i = 0; i < 2; i ++){
-			playerCards.add(deck.deal());
-			dealerCards.add(deck.deal());
+			p1.deal(deck.deal());
+			dealer.deal(deck.deal());
 		}
 		return deck;
 	}
 
 	private  void printCards(){
 		System.out.println("|-----Your Cards-----|---Dealer's Cards--|");
-		System.out.print("| " + Utils.formatSpaces(playerCards.toString()) + " | " + Utils.formatSpaces(dealerCards.toString()) + " |");
-		System.out.println("\nYour Score: " + playerCards.score() + "\nDealer Score: " + dealerCards.score());
+		System.out.print("| " + Utils.formatSpaces(p1.hand().toString()) + " | " + Utils.formatSpaces(dealer.hand().toString()) + " |");
+		System.out.println("\nYour Score: " + p1.hand().score() + "\nDealer Score: " + dealer.hand().score());
 	}
 
     private void printCardsHidden(){
         System.out.println("|-----Your Cards-----|---Dealer's Cards--|");
-	    System.out.print("| " + Utils.formatSpaces(playerCards.toString()) + " | " + Utils.formatSpaces(dealerCards.toStringDealer()) + " |");
-        System.out.println("\nYour Score: " + playerCards.score());
+	    System.out.print("| " + Utils.formatSpaces(p1.hand().toString()) + " | " + Utils.formatSpaces(dealer.hand().toStringDealer()) + " |");
+        System.out.println("\nYour Score: " + p1.hand().score());
     }
 
 	private  void printResult(int playerScore, int dealerScore){
