@@ -45,20 +45,25 @@ public class Blackjack {
 
     private Deck runPlayerHand(Deck deck){
     	Scanner scan = new Scanner(System.in);
-    	boolean acceptingCards = true;
-    	while(acceptingCards && p1.hand().score() <= 21){
-    		System.out.println("Hit or Knock (Enter H or K)");
-    		String response = scan.next();
-    		if(response.equalsIgnoreCase("H")){
-    			p1.deal(deck.deal());
+    	deck = hitQuery(deck, scan);
+    	return deck;
+    }
+
+    private Deck hitQuery(Deck deck, Scanner scan){
+	    boolean acceptingCards = true;
+	    while(acceptingCards && p1.hand().score() <= 21){
+		    System.out.println("Hit or Knock (Enter H or K)");
+		    String response = scan.next();
+		    if(response.equalsIgnoreCase("H")){
+			    p1.deal(deck.deal());
 			    System.out.flush();
 			    printCardsHidden();
 		    }
-    		else{
-    			acceptingCards = false;
+		    else{
+			    acceptingCards = false;
 		    }
 	    }
-    	return deck;
+		return deck;
     }
 
     private Deck runDealerHand(Deck deck){

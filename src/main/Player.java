@@ -5,6 +5,12 @@ public class Player {
 	private Hand hand;
 	public Player(){
 		hand = new Hand();
+		money = 0;
+	}
+
+	public Player(int startingMoney){
+		hand = new Hand();
+		money = startingMoney;
 	}
 
 	public void deal(Card newCard){
@@ -17,5 +23,17 @@ public class Player {
 
 	public Hand hand(){
 		return hand;
+	}
+
+	public boolean bet(int amount){
+		if(amount < money){
+			money -= amount;
+			return true;
+		}
+		return false;
+	}
+
+	public void addMoney(int amount){
+		money += amount;
 	}
 }
