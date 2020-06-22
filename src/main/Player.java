@@ -3,14 +3,17 @@ package main;
 public class Player {
 	private int money;
 	private Hand hand;
+	private String name;
+
 	public Player(){
 		hand = new Hand();
 		money = 0;
 	}
 
-	public Player(int startingMoney){
+	public Player(String name){
 		hand = new Hand();
-		money = startingMoney;
+		this.name = name;
+		money = 0;
 	}
 
 	public void deal(Card newCard){
