@@ -3,8 +3,8 @@ package main;
 import java.util.*;
 
 public class Blackjack {
-    private Player p1 = new Player();
-	private Player dealer = new Player();
+    private LocalPlayer p1 = new LocalPlayer();
+	private LocalPlayer dealer = new LocalPlayer();
 	private Deck deck = new Deck();
 
 	public  static void main(String[] args) {
@@ -80,29 +80,29 @@ public class Blackjack {
 	}
 
 	private void printCards(){
-		System.out.println("|-----Your Cards-----|---Dealer's Cards--|");
-		System.out.print("| " + Utils.formatSpaces(p1.hand().toString()) + " | " + Utils.formatSpaces(dealer.hand().toString()) + " |");
-		System.out.println("\nYour Score: " + p1.hand().score() + "\nDealer Score: " + dealer.hand().score());
+		p1.println("|-----Your Cards-----|---Dealer's Cards--|");
+		p1.print("| " + Utils.formatSpaces(p1.hand().toString()) + " | " + Utils.formatSpaces(dealer.hand().toString()) + " |");
+		p1.println("\nYour Score: " + p1.hand().score() + "\nDealer Score: " + dealer.hand().score());
 	}
 
     private void printCardsHidden(){
-        System.out.println("|-----Your Cards-----|---Dealer's Cards--|");
-	    System.out.print("| " + Utils.formatSpaces(p1.hand().toString()) + " | " + Utils.formatSpaces(dealer.hand().toStringDealer()) + " |");
-        System.out.println("\nYour Score: " + p1.hand().score());
+        p1.println("|-----Your Cards-----|---Dealer's Cards--|");
+	    p1.print("| " + Utils.formatSpaces(p1.hand().toString()) + " | " + Utils.formatSpaces(dealer.hand().toStringDealer()) + " |");
+        p1.println("\nYour Score: " + p1.hand().score());
     }
 
 	private  void printResult(int playerScore, int dealerScore){
     	System.out.println("#########################");
 		if(playerScore == dealerScore || (playerScore > 21 && dealerScore > 21)){
-			System.out.println("Push");
+			p1.println("Push");
 		}
 		else if(playerScore > 21 || (dealerScore > playerScore && dealerScore <= 21)){
-			System.out.println("Dealer Wins");
+			p1.println("Dealer Wins");
 		}
 		else{
-			System.out.println("Player Wins!");
+			p1.println("Player Wins!");
 		}
-		System.out.println("#########################");
+		p1.println("#########################");
 	}
 
 }

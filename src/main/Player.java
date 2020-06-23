@@ -1,6 +1,9 @@
 package main;
 
-public class Player {
+import java.io.InputStream;
+import java.util.Scanner;
+
+public abstract class Player {
 	private int money;
 	private Hand hand;
 	private String name;
@@ -39,4 +42,10 @@ public class Player {
 	public void addMoney(int amount){
 		money += amount;
 	}
+
+	public abstract void println(String s);
+	public abstract void print(String s);
+	public abstract String getInput(Scanner input);
+
+
 }
