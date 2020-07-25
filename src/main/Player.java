@@ -45,7 +45,7 @@ public abstract class Player {
 
 	public abstract void println(String s);
 	public abstract void print(String s);
-	public abstract String getInput(Scanner input);
+	public abstract String getInput();
 
 
 }

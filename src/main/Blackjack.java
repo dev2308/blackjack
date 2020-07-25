@@ -17,11 +17,10 @@ public class Blackjack {
 
     public void run() {
 		boolean playing = true;
-	    Scanner scan1 = new Scanner(System.in);
 		while(playing){
 			playOneRound();
-			System.out.println("Play Again? (Y or N)");
-			String response = scan1.next();
+			p1.println("Play Again? (Y or N)");
+			String response = p1.getInput();
 			if(!response.equalsIgnoreCase("y")){
 				playing = false;
 			}
@@ -29,7 +28,6 @@ public class Blackjack {
 				deck.reshuffle();
 			}
 		}
-	    scan1.close();
     }
 
      void playOneRound(){
@@ -51,7 +49,7 @@ public class Blackjack {
     private void hitQuery(Scanner scan){
 	    boolean acceptingCards = true;
 	    while(acceptingCards && p1.hand().score() <= 21){
-		    System.out.println("Hit or Knock (Enter H or K)");
+		    p1.println("Hit or Knock (Enter H or K)");
 		    String response = scan.next();
 		    if(response.equalsIgnoreCase("H")){
 			    p1.deal(deck.deal());
@@ -92,7 +90,7 @@ public class Blackjack {
     }
 
 	private  void printResult(int playerScore, int dealerScore){
-    	System.out.println("#########################");
+    	p1.println("#########################");
 		if(playerScore == dealerScore || (playerScore > 21 && dealerScore > 21)){
 			p1.println("Push");
 		}
