@@ -3,7 +3,7 @@ package main;
 import java.io.InputStream;
 import java.util.Scanner;
 
-public abstract class Player {
+public class Player {
 	private int money;
 	private Hand hand;
 	private String name;
@@ -43,9 +43,11 @@ public abstract class Player {
 		money += amount;
 	}
 
-	public abstract void println(String s);
-	public abstract void print(String s);
-	public abstract String getInput(Scanner input);
+	public String name(){
+		return name;
+	}
+
+
 
 
 }

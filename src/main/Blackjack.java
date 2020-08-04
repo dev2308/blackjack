@@ -3,8 +3,8 @@ package main;
 import java.util.*;
 
 public class Blackjack {
-    private LocalPlayer p1 = new LocalPlayer();
-	private LocalPlayer dealer = new LocalPlayer();
+	private ArrayList<Player> players = new ArrayList<>();
+	private Player dealer = new LocalPlayer();
 	private Deck deck = new Deck();
 
 	public  static void main(String[] args) {
@@ -16,6 +16,9 @@ public class Blackjack {
 	}
 
     public void run() {
+		for(int i = 1; i < 5; i++){
+			players.add(new Player("Player" + i));
+		}
 		boolean playing = true;
 	    Scanner scan1 = new Scanner(System.in);
 		while(playing){
@@ -33,76 +36,65 @@ public class Blackjack {
     }
 
      void playOneRound(){
-        dealCards();
-        printCardsHidden();
-		runPlayerHand();
-		printCards();
+		System.out.println("Starting Cards:");
+		dealCards();
+		printCardsHidden();
+		runHands();
 		runDealerHand();
-		printResult(p1.hand().score(), dealer.hand().score());
-	    p1.clearHand();
+		System.out.println("Final Cards:");
+		printCards();
+		for(Player p: players){
+			p.clearHand();
+		}
 	    dealer.clearHand();
     }
 
-    private void runPlayerHand(){
-    	Scanner scan = new Scanner(System.in);
-    	hitQuery(scan);
-    }
 
-    private void hitQuery(Scanner scan){
-	    boolean acceptingCards = true;
-	    while(acceptingCards && p1.hand().score() <= 21){
-		    System.out.println("Hit or Knock (Enter H or K)");
-		    String response = scan.next();
-		    if(response.equalsIgnoreCase("H")){
-			    p1.deal(deck.deal());
-			    System.out.flush();
-			    printCardsHidden();
-		    }
-		    else{
-			    acceptingCards = false;
-		    }
-	    }
+    private void runHands(){
+		for(Player p : players){
+			while(p.hand().score() < 17){
+				p.hand().add(deck.deal());
+			}
+		}
     }
 
     private void runDealerHand(){
     	while(dealer.hand().score() < 17){
 			dealer.hand().add(deck.deal());
-		    System.out.flush();
-		    printCards();
 	    }
     }
 
 	private void dealCards(){
 		for(int i = 0; i < 2; i ++){
-			p1.deal(deck.deal());
+			for(Player p: players) {
+				p.deal(deck.deal());
+			}
 			dealer.deal(deck.deal());
 		}
 	}
 
 	private void printCards(){
-		p1.println("|-----Your Cards-----|---Dealer's Cards--|");
-		p1.print("| " + Utils.formatSpaces(p1.hand().toString()) + " | " + Utils.formatSpaces(dealer.hand().toString()) + " |");
-		p1.println("\nYour Score: " + p1.hand().score() + "\nDealer Score: " + dealer.hand().score());
+		System.out.println("Dealer Cards: " + dealer.hand().score() + " points, " + dealer.hand().toString());
+		for(Player p: players){
+			System.out.println(p.name() + ": " + p.hand().score() + " points, " + p.hand().toString() + " - " + printResult(p.hand().score(), dealer.hand().score()));
+		}
 	}
 
     private void printCardsHidden(){
-        p1.println("|-----Your Cards-----|---Dealer's Cards--|");
-	    p1.print("| " + Utils.formatSpaces(p1.hand().toString()) + " | " + Utils.formatSpaces(dealer.hand().toStringDealer()) + " |");
-        p1.println("\nYour Score: " + p1.hand().score());
+		System.out.println("Dealer Cards: " + dealer.hand().toStringDealer());
+		for(Player p: players){
+			System.out.println(p.name() + ": " + p.hand().score() + " points, " + p.hand().toString());
+		}
     }
 
-	private  void printResult(int playerScore, int dealerScore){
-    	System.out.println("#########################");
-		if(playerScore == dealerScore || (playerScore > 21 && dealerScore > 21)){
-			p1.println("Push");
-		}
-		else if(playerScore > 21 || (dealerScore > playerScore && dealerScore <= 21)){
-			p1.println("Dealer Wins");
-		}
-		else{
-			p1.println("Player Wins!");
-		}
-		p1.println("#########################");
+	private String printResult(int playerScore, int dealerScore){
+	    if (playerScore == dealerScore || (playerScore > 21 && dealerScore > 21)) {
+		    return ("Push");
+	    } else if (playerScore > 21 || (dealerScore > playerScore && dealerScore <= 21)) {
+		    return ("Dealer Wins");
+	    } else {
+		    return ("Player Wins!");
+	    }
 	}
 
 }
