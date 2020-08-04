@@ -3,7 +3,7 @@ package main;
 import java.io.InputStream;
 import java.util.Scanner;
 
-public class Player {
+public abstract class Player {
 	private int money;
 	private Hand hand;
 	private String name;
