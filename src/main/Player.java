@@ -51,10 +51,6 @@ public class Player {
 	}
 
 	public void println(String s){
-		System.out.println(s);
-	}
-
-	public void print(String s){
-		System.out.print(s);
+		System.out.println(name+"> "+s);
 	}
 }
