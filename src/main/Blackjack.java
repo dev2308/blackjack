@@ -1,6 +1,7 @@
 package main;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Blackjack {
 	private ArrayList<Player> players;
@@ -13,7 +14,7 @@ public class Blackjack {
 
 	public Blackjack() {
 		players = new ArrayList<>();
-		dealer = new Player(this, "Dealer");
+		dealer = new Player("Dealer");
 		deck = new Deck();
 	}
 
@@ -22,8 +23,29 @@ public class Blackjack {
 	}
 
     public void run() {
+	    Thread inputThread = new Thread() {
+		    private Scanner scanner = new Scanner(System.in);
+		    public void run() {
+			    while (!isInterrupted()) {
+				    String line = scanner.next();
+				    String[] parts = line.split(",");
+				    if (parts.length == 2) {
+				    	try {
+						    int ndx = Integer.valueOf(parts[0]);
+						    handleUserInput(players.get(ndx), line);
+					    } catch (NumberFormatException e) {
+				    		System.out.println("?");
+					    }
+				    } else {
+					    System.out.println("?");
+				    }
+			    }
+		    }
+	    };
+	    inputThread.run();
+
 		for(int i = 1; i < 5; i++){
-			players.add(new Player(this, "Player" + i));
+			players.add(new Player("Player" + i));
 		}
 		boolean playing = true;
 	    Scanner scan1 = new Scanner(System.in);
@@ -38,6 +60,7 @@ public class Blackjack {
 				deck.reshuffle();
 			}
 		}
+	    inputThread.interrupt();
 	    scan1.close();
     }
 

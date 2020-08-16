@@ -1,25 +1,14 @@
 package main;
 
-import java.util.Scanner;
-
 public class Player {
 	private int money;
 	private Hand hand;
 	private String name;
 
-	public Player(Blackjack game, String name){
+	public Player(String name){
 		money = 0;
 		hand = new Hand();
 		this.name = name;
-		new Thread() {
-			public void run() {
-				Scanner scan1 = new Scanner(System.in);
-				do {
-					String line = scan1.next();
-					game.handleUserInput(Player.this, line);
-				} while (!this.isInterrupted());
-			}
-		};
 	}
 
 	public void deal(Card newCard){
