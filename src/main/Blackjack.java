@@ -3,21 +3,27 @@ package main;
 import java.util.*;
 
 public class Blackjack {
-	private ArrayList<Player> players = new ArrayList<>();
-	private Player dealer = new LocalPlayer();
-	private Deck deck = new Deck();
+	private ArrayList<Player> players;
+	private Player dealer;
+	private Deck deck;
 
 	public  static void main(String[] args) {
 		new Blackjack().run();
-
 	}
 
 	public Blackjack() {
+		players = new ArrayList<>();
+		dealer = new Player(this, "Dealer");
+		deck = new Deck();
+	}
+
+	public void handleUserInput(Player player, String input) {
+		// handle input from the user
 	}
 
     public void run() {
 		for(int i = 1; i < 5; i++){
-			players.add(new Player("Player" + i));
+			players.add(new Player(this, "Player" + i));
 		}
 		boolean playing = true;
 	    Scanner scan1 = new Scanner(System.in);

@@ -1,22 +1,25 @@
 package main;
 
-import java.io.InputStream;
 import java.util.Scanner;
 
-public abstract class Player {
+public class Player {
 	private int money;
 	private Hand hand;
 	private String name;
 
-	public Player(){
-		hand = new Hand();
+	public Player(Blackjack game, String name){
 		money = 0;
-	}
-
-	public Player(String name){
 		hand = new Hand();
 		this.name = name;
-		money = 0;
+		new Thread() {
+			public void run() {
+				Scanner scan1 = new Scanner(System.in);
+				do {
+					String line = scan1.next();
+					game.handleUserInput(Player.this, line);
+				} while (!this.isInterrupted());
+			}
+		};
 	}
 
 	public void deal(Card newCard){
@@ -47,7 +50,11 @@ public abstract class Player {
 		return name;
 	}
 
+	public void println(String s){
+		System.out.println(s);
+	}
 
-
-
+	public void print(String s){
+		System.out.print(s);
+	}
 }
