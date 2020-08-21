@@ -1,22 +1,21 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
-public class Blackjack {
+public class BlackjackQueued {
 	private ArrayList<Player> players;
 	private Player dealer;
 	private Deck deck;
+	private Scanner scanner;
 
 	public  static void main(String[] args) {
-		new Blackjack().run();
+		new BlackjackQueued().run();
 	}
 
-	public Blackjack() {
+	public BlackjackQueued() {
 		players = new ArrayList<>();
-		for(int i = 1; i < 5; i++){
-			players.add(new LocalHumanPlayer("Player" + i));
-		}
-		dealer = new LocalRoboPlayer("Dealer");
+		dealer = new Player("Dealer");
 		deck = new Deck();
 	}
 
@@ -25,16 +24,23 @@ public class Blackjack {
 	}
 
     public void run() {
+		for(int i = 1; i < 5; i++){
+			players.add(new Player("Player" + i));
+		}
 		boolean playing = true;
+	    scanner = new Scanner(System.in);
 		while(playing){
 			playOneRound();
-			if(!"y".equalsIgnoreCase(dealer.prompt("Play Again? (Y or N)"))){
+			System.out.println("Play Again? (Y or N)");
+			String response = scanner.next();
+			if(!response.equalsIgnoreCase("y")){
 				playing = false;
 			}
 			if(deck.size() <= 13){
 				deck.reshuffle();
 			}
 		}
+	    scanner.close();
     }
 
      void playOneRound(){
@@ -58,7 +64,9 @@ public class Blackjack {
 				boolean askForHit = true;
 				while (askForHit) {
 					printCardsHidden();
-					if (p.wantsHit()) {
+					p.println("Hit?");
+					String line = scanner.nextLine();
+					if (line.equalsIgnoreCase("y")) {
 						p.hand().add(deck.deal());
 						askForHit = p.hand().score() < 21;
 					} else {

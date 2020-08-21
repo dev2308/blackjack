@@ -42,4 +42,13 @@ public class Player {
 	public void println(String s){
 		System.out.println(name+"> "+s);
 	}
+
+	public boolean wantsHit() {
+		return "y".equalsIgnoreCase(prompt("Hit?"));
+
+	}
+
+	public String prompt(String text) {
+		return "";
+	}
 }
