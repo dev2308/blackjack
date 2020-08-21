@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Blackjack {
 	private ArrayList<Player> players;
@@ -13,22 +14,19 @@ public class Blackjack {
 
 	public Blackjack() {
 		players = new ArrayList<>();
-		for(int i = 1; i < 5; i++){
+		for(int i = 0; i < 4; i++){
 			players.add(new LocalHumanPlayer("Player" + i));
 		}
 		dealer = new LocalRoboPlayer("Dealer");
 		deck = new Deck();
 	}
 
-	public void handleUserInput(Player player, String input) {
-		// handle input from the user
-	}
-
     public void run() {
 		boolean playing = true;
 		while(playing){
 			playOneRound();
-			if(!"y".equalsIgnoreCase(dealer.prompt("Play Again? (Y or N)"))){
+			printToPlayer(dealer, "Play Again? (Y or N)");
+			if(!"y".equalsIgnoreCase(readFromPlayer(dealer))) {
 				playing = false;
 			}
 			if(deck.size() <= 13){
@@ -37,13 +35,35 @@ public class Blackjack {
 		}
     }
 
-     void playOneRound(){
-		System.out.println("Starting Cards:");
+	//-------------------------------
+    // these routines handle low level input/output from players
+	private final Scanner scanner = new Scanner(System.in);
+
+    private void printToPlayer(Player player, String message) {
+		System.out.println(player.name() + "> " + message);
+    }
+
+    private String readFromPlayer(Player player) {
+		return scanner.nextLine();
+    }
+    //-------------------------------
+
+	private boolean playerWantsHit(Player player) {
+		if (player instanceof LocalRoboPlayer) {
+			return player.hand().score() < 17;
+		} else {
+			printToPlayer(player, "Hit? ");
+			return "y".equalsIgnoreCase(readFromPlayer(player));
+		}
+	}
+
+    private void playOneRound(){
+		printToPlayer(dealer, "Starting Cards:");
 		dealCards();
 		printCardsHidden();
 		runHands();
 		runDealerHand();
-		System.out.println("Final Cards:");
+	    printToPlayer(dealer, "Final Cards:");
 		printCards();
 		for(Player p: players){
 			p.clearHand();
@@ -51,14 +71,13 @@ public class Blackjack {
 	    dealer.clearHand();
     }
 
-
     private void runHands(){
 		for(Player p : players){
 			if (p.hand().score() < 21) {
 				boolean askForHit = true;
 				while (askForHit) {
 					printCardsHidden();
-					if (p.wantsHit()) {
+					if (playerWantsHit(p)) {
 						p.hand().add(deck.deal());
 						askForHit = p.hand().score() < 21;
 					} else {
@@ -85,28 +104,36 @@ public class Blackjack {
 	}
 
 	private void printCards(){
-		System.out.println("Dealer Cards: " + dealer.hand().score() + " points, " + dealer.hand().toString());
-		for(Player p: players){
-			System.out.println(p.name() + ": " + p.hand().score() + " points, "
-					+ p.hand().toString() + " - " + printResult(p.hand().score(), dealer.hand().score()));
+		for (Player printPlayer : players) {
+			printToPlayer(printPlayer, "Dealer Cards: " + dealer.hand().score() + " points, " + dealer.hand().toString());
+			for (Player p : players) {
+				printToPlayer(printPlayer, p.name() + ": " + p.hand().score() + " points, "
+						+ p.hand().toString() + " - " + printResult(p.hand().score(), dealer.hand().score()));
+			}
 		}
 	}
 
     private void printCardsHidden(){
-		System.out.println("Dealer Cards: " + dealer.hand().toStringDealer());
-		for(Player p: players){
-			System.out.println(p.name() + ": " + p.hand().score() + " points, " + p.hand().toString());
-		}
+	    for (Player printPlayer : players) {
+		    printToPlayer(printPlayer, ("Dealer Cards: " + dealer.hand().toStringDealer()));
+		    for (Player p : players) {
+			    printToPlayer(printPlayer, (p.name() + ": " + p.hand().score() + " points, " + p.hand().toString()));
+		    }
+	    }
     }
 
 	private String printResult(int playerScore, int dealerScore){
-	    if (playerScore == dealerScore || (playerScore > 21 && dealerScore > 21)) {
-		    return ("Push");
-	    } else if (playerScore > 21 || (dealerScore > playerScore && dealerScore <= 21)) {
-		    return ("Dealer Wins");
-	    } else {
-		    return ("Player Wins!");
-	    }
+		if (playerScore > 21) {
+			return "Dealer Wins";
+		} else if (dealerScore > 21) {
+			return "Player Winds";
+		} else if (playerScore == dealerScore) {
+			return "Push";
+		} else if (playerScore < dealerScore) {
+			return "Dealer Wins";
+		} else {
+			return "Player Wins";
+		}
 	}
 
 }

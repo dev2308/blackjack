@@ -8,15 +8,4 @@ public class LocalHumanPlayer extends Player {
 	public LocalHumanPlayer(String name) {
 		super(name);
 	}
-
-	@Override
-	public boolean wantsHit() {
-		return prompt("Hit?").equalsIgnoreCase("y");
-	}
-
-	@Override
-	public String prompt(String text) {
-		println(text);
-		return scanner.nextLine();
-	}
 }
