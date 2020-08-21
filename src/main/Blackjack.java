@@ -7,6 +7,7 @@ public class Blackjack {
 	private ArrayList<Player> players;
 	private Player dealer;
 	private Deck deck;
+	private Scanner scanner;
 
 	public  static void main(String[] args) {
 		new Blackjack().run();
@@ -23,36 +24,15 @@ public class Blackjack {
 	}
 
     public void run() {
-	    Thread inputThread = new Thread() {
-		    private Scanner scanner = new Scanner(System.in);
-		    public void run() {
-			    while (!isInterrupted()) {
-				    String line = scanner.next();
-				    String[] parts = line.split(",");
-				    if (parts.length == 2) {
-				    	try {
-						    int ndx = Integer.valueOf(parts[0]);
-						    handleUserInput(players.get(ndx), line);
-					    } catch (NumberFormatException e) {
-				    		System.out.println("?");
-					    }
-				    } else {
-					    System.out.println("?");
-				    }
-			    }
-		    }
-	    };
-	    inputThread.run();
-
 		for(int i = 1; i < 5; i++){
 			players.add(new Player("Player" + i));
 		}
 		boolean playing = true;
-	    Scanner scan1 = new Scanner(System.in);
+	    scanner = new Scanner(System.in);
 		while(playing){
 			playOneRound();
 			System.out.println("Play Again? (Y or N)");
-			String response = scan1.next();
+			String response = scanner.next();
 			if(!response.equalsIgnoreCase("y")){
 				playing = false;
 			}
@@ -60,8 +40,7 @@ public class Blackjack {
 				deck.reshuffle();
 			}
 		}
-	    inputThread.interrupt();
-	    scan1.close();
+	    scanner.close();
     }
 
      void playOneRound(){
@@ -81,8 +60,19 @@ public class Blackjack {
 
     private void runHands(){
 		for(Player p : players){
-			while(p.hand().score() < 17){
-				p.hand().add(deck.deal());
+			if (p.hand().score() < 21) {
+				boolean askForHit = true;
+				while (askForHit) {
+					printCardsHidden();
+					p.println("Hit?");
+					String line = scanner.nextLine();
+					if (line.equalsIgnoreCase("y")) {
+						p.hand().add(deck.deal());
+						askForHit = p.hand().score() < 21;
+					} else {
+						askForHit = false;
+					}
+				}
 			}
 		}
     }
@@ -105,7 +95,8 @@ public class Blackjack {
 	private void printCards(){
 		System.out.println("Dealer Cards: " + dealer.hand().score() + " points, " + dealer.hand().toString());
 		for(Player p: players){
-			System.out.println(p.name() + ": " + p.hand().score() + " points, " + p.hand().toString() + " - " + printResult(p.hand().score(), dealer.hand().score()));
+			System.out.println(p.name() + ": " + p.hand().score() + " points, "
+					+ p.hand().toString() + " - " + printResult(p.hand().score(), dealer.hand().score()));
 		}
 	}
 
