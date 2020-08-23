@@ -15,9 +15,9 @@ public class Blackjack {
 	public Blackjack() {
 		players = new ArrayList<>();
 		for(int i = 0; i < 4; i++){
-			players.add(new LocalHumanPlayer("Player" + i));
+			players.add(new Player("Player" + i));
 		}
-		dealer = new LocalRoboPlayer("Dealer");
+		dealer = new Player("Dealer");
 		deck = new Deck();
 	}
 
@@ -49,7 +49,7 @@ public class Blackjack {
     //-------------------------------
 
 	private boolean playerWantsHit(Player player) {
-		if (player instanceof LocalRoboPlayer) {
+		if (player == dealer) {
 			return player.hand().score() < 17;
 		} else {
 			printToPlayer(player, "Hit? ");
@@ -72,7 +72,7 @@ public class Blackjack {
     }
 
     private void runHands(){
-		for(Player p : players){
+		for(Player p : players) {
 			if (p.hand().score() < 21) {
 				boolean askForHit = true;
 				while (askForHit) {

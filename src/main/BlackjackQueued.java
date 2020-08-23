@@ -80,9 +80,9 @@ public class BlackjackQueued {
 	public BlackjackQueued() {
 		players = new ArrayList<>();
 		for(int i = 0; i < 4; i++){
-			players.add(new LocalHumanPlayer("Player" + i));
+			players.add(new Player("Player" + i));
 		}
-		dealer = new LocalRoboPlayer("Dealer");
+		dealer = new Player("Dealer");
 		deck = new Deck();
 	}
 
@@ -102,7 +102,7 @@ public class BlackjackQueued {
 	}
 
 	private boolean playerWantsHit(Player player) {
-		if (player instanceof LocalRoboPlayer) {
+		if (player == dealer) {
 			return player.hand().score() < 17;
 		} else {
 			printToPlayer(player, "Hit? ");
