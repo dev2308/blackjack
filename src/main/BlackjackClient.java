@@ -19,12 +19,12 @@ public class BlackjackClient extends GenericClient {
 		super.start(address, port);
 		try {
 			sendMessageToServer(Command.HANDLE_NAME, name);
+			inputThread = new InputThread();
+			inputThread.start();
 		} catch (IOException e) {
 			stop();
 			throw e;
 		}
-		inputThread = new InputThread();
-		inputThread.start();
 	}
 
 	@Override
@@ -37,6 +37,7 @@ public class BlackjackClient extends GenericClient {
 
 	@Override
 	protected void handleMessageFromServer(Command command, String message) {
+		assert(command == Command.HANDLE_OUTPUT);
 		System.out.println(message);
 	}
 
